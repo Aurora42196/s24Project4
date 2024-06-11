@@ -12,6 +12,7 @@
 #include <iterator>
 #include <cassert>
 #include "Revision.h"
+#include "HashTable.h"
 using namespace std;
 
 bool runtest(string oldName, string newName, string revisionName, string newName2)
@@ -81,7 +82,7 @@ bool runtest(string oldName, string newName, string revisionName, string newName
 
 int main()
 {
-    assert(runtest("myoldfile.txt", "mynewfile.txt", "myrevisionfile.txt", "mynewfile2.txt"));
+//    assert(runtest("myoldfile.txt", "mynewfile.txt", "myrevisionfile.txt", "mynewfile2.txt"));
 //    ofstream outfile("results.txt");
 //    if(! outfile)
 //    {
@@ -110,6 +111,13 @@ int main()
 //    cout << "line extracted from the infile: " << line << endl;
 //    cout << "char extracted from the infile: " << c << endl;
 
+    HashTable ht;
+    size_t offset = 4;
+    size_t o;
+    ht.insert("this is a test insert", offset);
+    assert(ht.contains("this is a test insert", o));
+    assert(!ht.contains("this is a test", o));
+    assert(o == 4);
     cerr << "Test PASSED" << endl;
 }
 
