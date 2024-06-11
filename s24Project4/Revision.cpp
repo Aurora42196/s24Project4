@@ -30,14 +30,14 @@ bool revise(istream& fold, istream& frevision, ostream& fnew)
         return false;
     
     // Copy the contents of the old file into a string
-    char c;
+    char c = '\0';
     while (fold.get(c))
     {
         oldString += c;
     }
     
     // Use the getCommand utility function to determine if the revision file contains valid instructions
-    while(frevision)
+    while(frevision) //Loop through the revision file until it reached an invalid state
     {
         char cmd = '\0';
         char delim = '\0';
