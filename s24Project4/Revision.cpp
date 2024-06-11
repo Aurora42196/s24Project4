@@ -30,11 +30,11 @@ bool revise(istream& fold, istream& frevision, ostream& fnew)
         return false;
     
     // Copy the contents of the old file into a string
-//    char c;
-//    while (fold.get(c))
-//    {
-//        oldString += c;
-//    }
+    char c;
+    while (fold.get(c))
+    {
+        oldString += c;
+    }
     
     // Use the getCommand utility function to determine if the revision file contains valid instructions
     while(frevision)
@@ -71,7 +71,7 @@ bool revise(istream& fold, istream& frevision, ostream& fnew)
                  character in the old file (e.g., #12,0 for an old file with 12 or fewer
                  characters), you may either consider it valid (and have it do nothing) or you
                  may consider it invalid (and have revise return false), your choice. */
-                if(offset < 0 || offset + length > oldString.size())
+                if(offset < 0 || length < 0 || offset + length > oldString.size())
                     return false;
                 fnew << oldString.substr(offset, length);
                 break;
