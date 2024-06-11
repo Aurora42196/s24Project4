@@ -7,8 +7,12 @@
 
 #ifndef utilities_h
 #define utilities_h
+
+#include <iostream>
+#include <fstream>
+
 ////////////////////////////////////////////////////////////////////////////// Functions given to me from Smallberg to help extract instructions from the revision file
-bool getInt(istream& inf, int& n)
+bool getInt(std::istream& inf, int& n)
 {
     char ch;
     if (!inf.get(ch)  ||  !isascii(ch)  ||  !isdigit(ch))
@@ -18,7 +22,7 @@ bool getInt(istream& inf, int& n)
     return true;
 }
 
-bool getCommand(istream& inf, char& cmd, char& delim, int& length, int& offset)
+bool getCommand(std::istream& inf, char& cmd, char& delim, int& length, int& offset)
 {
     if (!inf.get(cmd))
     {

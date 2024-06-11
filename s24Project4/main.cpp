@@ -118,6 +118,18 @@ int main()
     assert(ht.contains("this is a test insert", o));
     assert(!ht.contains("this is a test", o));
     assert(o == 4);
+    
+    ifstream oldFile("greeneggs1.txt");
+    if ( ! oldFile )                // Did opening the file fail?
+    {
+        cerr << "Error: Cannot open data.txt!" << endl;
+        exit(1);
+    }
+
+    ifstream revisionFile("revFile.txt");
+    ofstream newFile("newFile.txt");
+    assert(revise(oldFile, revisionFile, newFile));
+
     cerr << "Test PASSED" << endl;
 }
 
