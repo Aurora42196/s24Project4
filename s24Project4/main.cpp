@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <iterator>
 #include <cassert>
-#include "PrecisionRevision.h"
+#include "Revision.h"
 using namespace std;
 
 bool runtest(string oldName, string newName, string revisionName, string newName2)
@@ -43,7 +43,7 @@ bool runtest(string oldName, string newName, string revisionName, string newName
     }
     createRevision(oldFile, newFile, revisionFile);
     revisionFile.close();
-    
+
     oldFile.clear();   // clear the end of file condition
     oldFile.seekg(0);  // reset back to beginning of the file
     ifstream revisionFile2(revisionName, ios::binary);
@@ -60,7 +60,7 @@ bool runtest(string oldName, string newName, string revisionName, string newName
     }
     assert(revise(oldFile, revisionFile2, newFile2));
     newFile2.close();
-    
+
     newFile.clear();
     newFile.seekg(0);
     ifstream newFile3(newName2, ios::binary);
@@ -82,5 +82,69 @@ bool runtest(string oldName, string newName, string revisionName, string newName
 int main()
 {
     assert(runtest("myoldfile.txt", "mynewfile.txt", "myrevisionfile.txt", "mynewfile2.txt"));
+//    ofstream outfile("results.txt");
+//    if(! outfile)
+//    {
+//        cerr << "Error: Cannot create results.txt!" << endl;
+//        exit(1);
+//    }
+//    outfile << "This will be written to the file" << endl;
+//    outfile << "2 + 2 = " << 2+2 << endl;
+//    outfile << "This will also be written to the same file (I think...)" << endl;
+//
+//    ifstream infile("greeneggs1.txt");    // infile is a name of our choosing
+//    if ( ! infile )                // Did opening the file fail?
+//    {
+//        cerr << "Error: Cannot open data.txt!" << endl;
+//        exit(1);
+//    }
+//
+//    string w;
+//    infile >> w;
+//    string line;
+//    getline(infile, line);
+//    char c;
+//    infile.get(c);
+//
+//    cout << "word extracted from infile: " << w << endl;
+//    cout << "line extracted from the infile: " << line << endl;
+//    cout << "char extracted from the infile: " << c << endl;
+
     cerr << "Test PASSED" << endl;
 }
+
+/////////// TEST 2 GIVEN BY SMALLBERG
+
+//#include <iostream>
+//#include <sstream>  // for istringstream and ostringstream
+//#include <string>
+//#include <cassert>
+//using namespace std;
+//
+//void runtest(string oldtext, string newtext)
+//{
+//    istringstream oldFile(oldtext);
+//    istringstream newFile(newtext);
+//    ostringstream revisionFile;
+//    createRevision(oldFile, newFile, revisionFile);
+//    string result = revisionFile.str();
+//    cout << "The revision file length is " << result.size()
+//    << " and its text is " << endl;
+//    cout << result << endl;
+//    
+//    oldFile.clear();   // clear the end of file condition
+//    oldFile.seekg(0);  // reset back to beginning of the stream
+//    istringstream revisionFile2(result);
+//    ostringstream newFile2;
+//    assert(revise(oldFile, revisionFile2, newFile2));
+//    assert(newtext == newFile2.str());
+//}
+//
+//int main()
+//{
+//    runtest("There's a bathroom on the right.",
+//            "There's a bad moon on the rise.");
+//    runtest("ABCDEFGHIJBLAHPQRSTUVPQRSTUV",
+//            "XYABCDEFGHIJBLETCHPQRSTUVPQRSTQQ/OK");
+//    cout << "All tests passed" << endl;
+//}
