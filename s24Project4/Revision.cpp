@@ -7,6 +7,7 @@
 
 #include "Revision.h"
 #include "utilities.h"
+#include "HashTable.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -15,7 +16,104 @@ using namespace std;
 
 void createRevision(istream& fold, istream& fnew, ostream& frevision)
 {
+    if(!fold)
+    {
+        cerr << "Invalid fold file passed in or in invalid state!" << endl;
+        exit(1);
+    }
     
+    if(!fnew)
+    {
+        cerr << "Invalid fnew file passed in or in invalid state!" << endl;
+        exit(1);
+    }
+    
+    const size_t sequenceLength = 8;
+    string oldString;
+    string newString;
+    
+    // Read in the entire contents of the old file into a string.
+    // Read the entire contents of the new file into another string.
+    char c = '\0';
+    while (fold.get(c))
+    {
+        oldString += c;
+    }
+    
+    char n = '\0';
+    while(fnew.get(n))
+    {
+        newString += n;
+    }
+    
+    // Create a hash table to store the sequences of strings
+    HashTable hashTable;
+    for (size_t i = 0; i < oldString.size(); i += sequenceLength)
+    {
+        string oldSeq = oldString.substr(i, sequenceLength);
+        hashTable.insert(oldSeq, i);
+    }
+    
+    size_t oldOffset = 0;
+    size_t j = 0;
+    size_t length = 0;
+    for(; j <= newString.size();/* j++*/)
+    {
+        string newSeq = newString.substr(j, sequenceLength);
+        
+        if(hashTable.contains(newSeq, oldOffset))
+        {
+            // This function checks beyond the length of the initial sequence to see if
+            // any characters after the length still match the newFile, if it does,
+            // we can increment the length to accomodate for that length of the match
+            size_t lengthOfMatch = sequenceLength;
+            while (j + lengthOfMatch < newString.size() && oldOffset + lengthOfMatch < oldString.size() && newString[j+lengthOfMatch] == oldString[oldOffset + lengthOfMatch])
+            {
+                lengthOfMatch++;
+            }
+            
+//            length = lengthOfMatch;
+            /*Once you have determined how long the match is (call this L),
+             write a Copy instruction to the revision file to copy L bytes
+             from offset F from the source file.*/
+            if(lengthOfMatch >= sequenceLength)
+            {
+                frevision << "#" << oldOffset << "," << lengthOfMatch; // Copy Instruction
+                j += lengthOfMatch;
+//                oldOffset = 0;
+            }
+        }
+        else // newSeq was not found in the hash table
+        {
+            length = 1;
+            while (j + length < newString.size())
+            {
+                if(hashTable.contains(newString.substr(j + length, sequenceLength), oldOffset))
+                    break;
+                length++;
+            }
+            // Add the entire newSeq to our revision file
+            string checker = newString.substr(j, length);
+            bool hasDelimeter = false;
+            for(int i = 0; i < checker.size(); i++) // this loop checks the substring in the new file to see if it contains the delimeter we want to use
+            {
+                if(checker[i] == '/')
+                {
+                    hasDelimeter = true;
+                    break;
+                }
+            }
+            if (hasDelimeter)
+            {
+                frevision << "+$" << newString.substr(j, length) << "$";
+            }
+            else
+            {
+                frevision << "+/" << newString.substr(j, length) << "/"; // Add Instruction
+            }
+            j += length;
+        }
+    }
 }
 
 bool revise(istream& fold, istream& frevision, ostream& fnew)
