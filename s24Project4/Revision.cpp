@@ -149,16 +149,8 @@ bool revise(istream& fold, istream& frevision, ostream& fnew)
                 {
                     if(length < 0)
                         return false;
-    //                char c;
-    //                while(length > 0) // Add all the characters until you hit the next delimiter
-    //                {
-    //                    if(!frevision.get(c)) // Handles the case where the length is invalid for the number of characters in the revision file
-    //                        return false;
-    //
-    //                    fnew << c;
-    //                    length--;
-    //                }
                     string subString;
+                    // Extract all the characters up to the next delimiter symbol and append it to the new file
                     getline(frevision, subString, delim);
                     fnew << subString;
                     break;
