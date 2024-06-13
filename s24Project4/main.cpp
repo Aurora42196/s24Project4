@@ -80,12 +80,37 @@ bool runtest(string oldName, string newName, string revisionName, string newName
     return true;
 }
 
+#include <iostream>
+#include <sstream>  // for istringstream and ostringstream
+#include <string>
+#include <cassert>
+using namespace std;
+
+void runtest2(string oldtext, string newtext)
+{
+    istringstream oldFile(oldtext);
+    istringstream newFile(newtext);
+    ostringstream revisionFile;
+    createRevision(oldFile, newFile, revisionFile);
+    string result = revisionFile.str();
+    cout << "The revision file length is " << result.size()
+    << " and its text is " << endl;
+    cout << result << endl;
+    
+    oldFile.clear();   // clear the end of file condition
+    oldFile.seekg(0);  // reset back to beginning of the stream
+    istringstream revisionFile2(result);
+    ostringstream newFile2;
+    assert(revise(oldFile, revisionFile2, newFile2));
+    assert(newtext == newFile2.str());
+}
+
 int main()
 {
-    assert(runtest("greeneggs1.txt", "greeneggs2.txt", "revision.txt", "newGreenEggs.txt"));
-    assert(runtest("strange1.txt", "strange2.txt", "revision.txt", "newStrange.txt"));
-//    assert(runtest("mallmart1.txt", "mallmart2.txt", "revision.txt", "newMallmart.txt"));
-    assert(runtest("warandpeace1.txt", "warandpeace2.txt", "revision.txt", "newWarandPeace.txt"));
+    assert(runtest("greeneggs1.txt", "greeneggs2.txt", "revision1.txt", "newGreenEggs.txt"));
+    assert(runtest("strange1.txt", "strange2.txt", "revision2.txt", "newStrange.txt"));
+    assert(runtest("mallmart1.txt", "mallmart2.txt", "revision3.txt", "newMallmart.txt"));
+    assert(runtest("warandpeace1.txt", "warandpeace2.txt", "revision4.txt", "newWarandPeace.txt"));
 //    ofstream outfile("results.txt");
 //    if(! outfile)
 //    {
@@ -133,6 +158,11 @@ int main()
 //    ofstream newFile("newFile.txt");
 //    assert(revise(oldFile, revisionFile, newFile));
 //
+    runtest2("There's a bathroom on the right.",
+            "There's a bad moon on the rise.");
+    runtest2("ABCDEFGHIJBLAHPQRSTUVPQRSTUV",
+            "XYABCDEFGHIJBLETCHPQRSTUVPQRSTQQ/OK");
+    cout << "All tests passed" << endl;
     cerr << "Test PASSED" << endl;
 }
 
@@ -143,8 +173,8 @@ int main()
 //#include <string>
 //#include <cassert>
 //using namespace std;
-//
-//void runtest(string oldtext, string newtext)
+
+//void runtest2(string oldtext, string newtext)
 //{
 //    istringstream oldFile(oldtext);
 //    istringstream newFile(newtext);
